@@ -12,7 +12,7 @@ object euler {
     else if (n % divisor == 0) divisor :: primeFactors(n / divisor, divisor)
     else primeFactors(n, nextPossiblePrime(divisor))
 
-  val primesUnder30 = List(1, 2, 3, 5, 7, 11, 13, 17, 23, 29)
+  private val primesUnder30 = List(1, 2, 3, 5, 7, 11, 13, 17, 23, 29)
   def nextPossiblePrime(n: Int): Int =
     if (n < 29) primesUnder30.find(x => x > n).get
     else if (n == 29) n + 2
@@ -31,6 +31,16 @@ object euler {
       else if (divisor * divisor > n) true
       else isPrime(n, nextPossiblePrime(divisor))
     }
+  }
+
+  private def palindromeHelper(rest: List[Char], head: Char): Boolean =
+    if      (rest.length < 1)   true
+    else if (rest.last != head) false
+    else    palindromeHelper(rest.tail.dropRight(1), rest.head)
+
+  def palindrome(input: Any): Boolean = {
+    val list = input.toString().toList
+    palindromeHelper(list.tail, list.head)
   }
 
 }
