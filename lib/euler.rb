@@ -35,15 +35,14 @@ class Integer
       cur = self
       mod = self % 30
       if (mod == 0)
-        cur -= 1
-        mod  = 29
+        n + 1
       else
         until (@@increments.has_key? mod.to_s) do
           puts mod
           mod -= 1
         end
+        self + @@increments[mod.to_s]
       end
-      self + @@increments[mod.to_s]
     else
       sieve(30).select { |x| x > cur }.first
     end
