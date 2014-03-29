@@ -1,4 +1,9 @@
-def fib x
-  if x < 3 then 1
-  else fib(x - 1) + fib(x - 2) end
+def fib n, cur = 1, prev = 0
+  if (n == 0)
+    prev
+  elsif (n == 1)
+    cur
+  else
+    fib(n - 1, cur + prev, cur)
+  end
 end
