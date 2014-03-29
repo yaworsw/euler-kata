@@ -1,0 +1,1 @@
+../../lib/euler.scala
