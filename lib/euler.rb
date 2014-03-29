@@ -79,6 +79,10 @@ class Integer
     factors
   end
 
+  def palindrome?
+    self.to_s.palindrome?
+  end
+
   private
 
     # Used to find the next number not divisible by 2, 3, or 5
@@ -93,5 +97,13 @@ class Integer
       '23' => 6,
       '29' => 2
     }
+
+end
+
+class String
+
+  def palindrome?
+    self == self.reverse
+  end
 
 end
