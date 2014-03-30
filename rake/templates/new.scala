@@ -2,7 +2,7 @@ import euler._
 
 object Main extends App {
 
-  val answer = euler.lcd(2 to 20)
+  val answer = 0 // do something here
 
   println(answer)
 
