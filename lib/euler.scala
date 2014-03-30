@@ -25,17 +25,18 @@ object euler {
     }
   }
 
-  def sieve(upTo: Int): List[Int] =
-    if (upTo <= 2) List(2)
-    else if (isPrime(upTo)) sieve(upTo - 2) :+ upTo // decrement by 2 since all primes are odd
-    else sieve(upTo - 1)
+  def sieve(upTo: Int, cur: Int = 2): List[Int] =
+    if      (cur > upTo) List()
+    else if (isPrime(cur)) cur :: sieve(upTo, nextPossiblePrime(cur))
+    else    sieve(upTo, nextPossiblePrime(cur))
 
   def isPrime(n: Int, divisor: Int = -1): Boolean = divisor match {
     case -1 => isPrime(n, 2)
     case _  => {
-      if (n % divisor == 0) false
+      if      (n == 2)                true
+      else if (n % divisor == 0)      false
       else if (divisor * divisor > n) true
-      else isPrime(n, nextPossiblePrime(divisor))
+      else    isPrime(n, nextPossiblePrime(divisor))
     }
   }
 
