@@ -22,7 +22,7 @@ def sieve up_to
     end
     primes
   else
-    [2, 3, 5, 7, 11, 13, 17, 23, 29].select { |x| x <= up_to }
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29].select { |x| x <= up_to }
   end
 end
 
@@ -31,20 +31,22 @@ class Integer
   # Returns the lowest number greater than this integer that is not divisible by
   # 2, 3, and 5
   def next_possible_prime
-    if (self >= 30)
-      cur = self
-      mod = self % 30
+    cur = self
+    if (cur >= 29)
+      mod = cur % 30
       if (mod == 0)
-        n + 1
+        cur + 1
+      elsif (mod == 29)
+        cur + 2
       else
         until (@@increments.has_key? mod.to_s) do
           puts mod
           mod -= 1
         end
-        self + @@increments[mod.to_s]
+        cur + @@increments[mod.to_s]
       end
     else
-      sieve(30).select { |x| x > cur }.first
+      sieve(30).find { |x| x > cur }
     end
   end
 
