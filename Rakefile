@@ -1,19 +1,35 @@
 require 'fileutils'
+require 'yaml'
+require 'colorize'
 
 task 'default' => ['run']
+
+def problem_id_from_path path
+  Regexp.new("#{__dir__}/(\\d)").match(path)[1]
+end
+
+def language_form_path path
+  Regexp.new("#{__dir__}/\\d/([^/]+)").match(path)[1]
+end
+
+def run problem_id, lang
+  if lang == 'ruby'
+    `ruby #{__dir__}/#{problem_id}/ruby/#{problem_id}.rb`
+
+  elsif lang == 'scala'
+    Dir.chdir "#{__dir__}/#{problem_id}/scala/"
+    `scalac #{__dir__}/#{problem_id}/scala/*.scala && scala Main`
+
+  end
+end
 
 task 'run' do
   cwd = ENV['cwd']
 
-  problem_id = Regexp.new("#{__dir__}/(\\d)").match(cwd)[1]
-  lang       = Regexp.new("#{__dir__}/\\d/([^/]+)").match(cwd)[1]
+  problem_id = problem_id_from_path cwd
+  lang       = language_form_path cwd
 
-  if lang == 'ruby'
-    exec "ruby #{__dir__}/#{problem_id}/ruby/#{problem_id}.rb"
-  elsif lang == 'scala'
-    Dir.chdir "#{__dir__}/#{problem_id}/scala/"
-    exec "scalac #{__dir__}/#{problem_id}/scala/*.scala && scala Main"
-  end
+  puts run problem_id, lang
 end
 
 task 'new', [:id, :lang] do |t, options|
@@ -30,4 +46,33 @@ task 'new', [:id, :lang] do |t, options|
     FileUtils.symlink "#{__dir__}/lib/euler.scala", "#{__dir__}/#{pid}/scala/euler.scala"
     FileUtils.cp "#{__dir__}/rake/templates/new.scala", "#{__dir__}/#{pid}/scala/#{pid}.scala"
   end
+end
+
+task 'test' do
+  cwd = ENV['cwd']
+
+  problem_id = problem_id_from_path cwd
+  lang       = language_form_path cwd
+
+  puts
+  puts "Testing #{lang} answer for problem #{problem_id}."
+
+  answers = YAML.load_file "#{__dir__}/answers.yaml"
+
+  correct_answer = answers[problem_id.to_i].to_s
+
+  puts
+  puts ("Expected: ".light_black + "#{correct_answer}").bold
+
+  result  = (run problem_id, lang).sub(/\s$/,'')
+
+  puts ("Result:   ".light_black + "#{result}").bold
+
+  puts
+  if result == correct_answer
+    puts "                         PASS                         ".bold.on_green
+  else
+    puts "                         FAIL                         ".bold.on_red
+  end
+  puts
 end
