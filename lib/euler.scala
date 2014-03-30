@@ -31,6 +31,12 @@ object euler {
     }
   }
 
+  def nextPrime(n: Int): Int = {
+    val possible = nextPossiblePrime(n)
+    if (isPrime(possible)) possible
+    else nextPrime(possible)
+  }
+
   // Returns a prime number sieve
   def sieve(upTo: Int, cur: Int = 2): List[Int] =
     if      (cur > upTo) List()
