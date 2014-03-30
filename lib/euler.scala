@@ -5,17 +5,20 @@ import scala.collection.mutable.HashMap
 
 object euler {
 
+  // Returns the nth number in the Fibonacci sequence
   def fib(n: Int, cur: Int = 1, prev: Int = 0): Int =
     if (n == 0) prev
     else if (n == 1) cur
     else fib(n - 1, cur + prev, cur)
 
-  def primeFactors(n: BigInt, divisor: Int = 2): List[Int] = {
+  // Returns a number's prime factors
+  def primeFactors(n: BigInt, divisor: Int = 2): List[Int] =
     if (n <= 1) Nil
     else if (n % divisor == 0) divisor :: primeFactors(n / divisor, divisor)
     else primeFactors(n, nextPossiblePrime(divisor))
-  }
 
+  // Returns the lowest number greater than the given number that is not
+  // divisible by 2, 3, or 5
   private val primesUnder30 = List(1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29)
   def nextPossiblePrime(n: Int): Int = {
     if (n < 29) primesUnder30.find(x => x > n).get
@@ -28,11 +31,13 @@ object euler {
     }
   }
 
+  // Returns a prime number sieve
   def sieve(upTo: Int, cur: Int = 2): List[Int] =
     if      (cur > upTo) List()
     else if (isPrime(cur)) cur :: sieve(upTo, nextPossiblePrime(cur))
     else    sieve(upTo, nextPossiblePrime(cur))
 
+  // Determines if a number is prime
   def isPrime(n: Int, divisor: Int = -1): Boolean = divisor match {
     case -1 => isPrime(n, 2)
     case _  => {
@@ -43,35 +48,45 @@ object euler {
     }
   }
 
+  // Determines if the input is a palindrome by converting it into a List[Char]
+  // and comparing the corresponding elements
+  def palindrome[T](input: T): Boolean = {
+    val list = input.toString().toList
+    palindromeHelper(list.tail, list.head)
+  }
+
   private def palindromeHelper(rest: List[Char], head: Char): Boolean =
     if      (rest.length < 1)   true
     else if (rest.last != head) false
     else    palindromeHelper(rest.tail.dropRight(1), rest.head)
 
-  def palindrome(input: Any): Boolean = {
-    val list = input.toString().toList
-    palindromeHelper(list.tail, list.head)
-  }
+  // Given a list return a map which counts how many occurrences of each
+  // element is in the list
+  def countOccurrences[T](list: TraversableOnce[T]): Map[T, Int] =
+    list.foldLeft(new HashMap[T, Int]) {
+      (acc, element) =>
+        acc.update(element, acc.getOrElse(element, 0) + 1)
+        acc
+      }
 
-  // Given a list of lists calculate the frequencies the elements appear in
-  // those lists
-  def frequency[T](lists: TraversableOnce[TraversableOnce[T]]): Map[T, Int] =
-    lists.foldLeft(new HashMap[T, Int]) {
-      (acc, elements) =>
-        elements.foldLeft(new HashMap[T, Int]) {
-          (acc, element) =>
-            acc.update(element, acc.getOrElse(element, 0) + 1)
-            acc
-        }.foreach {
+  // Given a list of lists return a map with the count of the most times each
+  // element occurs in the lists
+  def highestFrequencies[T](lists: TraversableOnce[TraversableOnce[T]]): Map[T, Int] = {
+    var acc = new HashMap[T, Int]()
+    lists.map(countOccurrences).foldLeft(new HashMap[T, Int]) {
+      (acc, map) =>
+        map.foreach {
           case (key, value) =>
             val best = acc.getOrElse(key, 0)
             if (value > best) acc.update(key, value)
         }
         acc
     }
+  }
 
+  // Returns the lowest common denominator of a list of numbers
   def lcd(numbers: Seq[Int]): BigInt =
-    frequency(numbers.map(BigInt.apply).map(primeFactors(_))).foldLeft(BigInt.apply(1)) {
+    highestFrequencies(numbers.map(BigInt.apply).map(primeFactors(_))).foldLeft(BigInt.apply(1)) {
       case (acc, (key, value)) =>
         val bigKey = BigInt.apply(key)
         acc * bigKey.pow(value)
