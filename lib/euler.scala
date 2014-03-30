@@ -5,6 +5,14 @@ import scala.collection.mutable.HashMap
 
 object euler {
 
+  // Reads a file and returns the contents
+  def readFile(path: String): String ={
+    val source   = io.Source.fromFile(path)
+    val contents = source.mkString
+    source.close()
+    contents
+  }
+
   // Returns the nth number in the Fibonacci sequence
   def fib(n: Int, cur: Int = 1, prev: Int = 0): Int =
     if (n == 0) prev
