@@ -1,5 +1,8 @@
 package euler
 
+import scala.collection._
+import scala.collection.mutable.HashMap
+
 object euler {
 
   def fib(n: Int, cur: Int = 1, prev: Int = 0): Int =
@@ -49,5 +52,29 @@ object euler {
     val list = input.toString().toList
     palindromeHelper(list.tail, list.head)
   }
+
+  // Given a list of lists calculate the frequencies the elements appear in
+  // those lists
+  def frequency[T](lists: TraversableOnce[TraversableOnce[T]]): Map[T, Int] =
+    lists.foldLeft(new HashMap[T, Int]) {
+      (acc, elements) =>
+        elements.foldLeft(new HashMap[T, Int]) {
+          (acc, element) =>
+            acc.update(element, acc.getOrElse(element, 0) + 1)
+            acc
+        }.foreach {
+          case (key, value) =>
+            val best = acc.getOrElse(key, 0)
+            if (value > best) acc.update(key, value)
+        }
+        acc
+    }
+
+  def lcd(numbers: Seq[Int]): BigInt =
+    frequency(numbers.map(BigInt.apply).map(primeFactors(_))).foldLeft(BigInt.apply(1)) {
+      case (acc, (key, value)) =>
+        val bigKey = BigInt.apply(key)
+        acc * bigKey.pow(value)
+    }
 
 }
