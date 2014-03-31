@@ -16,8 +16,12 @@ class Problem
     @doc = Nokogiri::HTML(open(self.url))
   end
 
+  def has_answer?
+    not answer.empty?
+  end
+
   def answer
-    Problem.answers[@id.to_i].to_s
+    @answer ||= Problem.answers[@id.to_i].to_s
   end
 
   def doc

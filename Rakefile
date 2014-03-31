@@ -64,4 +64,11 @@ task 'desc', [:problem_id] do |t, options|
     puts p.inner_html
     puts
   end
+
+  if problem.has_answer?
+    puts "The solution to this problem is: " + problem.answer.bold
+  else
+    puts "This problem does not have an answer yet.".on_red
+  end
+  puts
 end
