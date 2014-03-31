@@ -1,8 +1,35 @@
-require 'fileutils'
-require 'yaml'
 require 'colorize'
+require 'fileutils'
+require 'net/http'
+require 'yaml'
+require 'nokogiri'
+require 'open-uri'
 
 task 'default' => ['run']
+
+def get_problem_description problem_id
+  url   = "http://projecteuler.net/problem=#{problem_id}"
+  doc   = Nokogiri::HTML(open("http://projecteuler.net/problem=#{problem_id}"))
+  {
+    title:           doc.css('h2').first.inner_html,
+    problem_content: doc.css('.problem_content').first.inner_html,
+    url:             url
+  }
+end
+
+def get_readme_path problem_id
+  "#{__dir__}/#{problem_id}/README.md"
+end
+
+def write_readme problem_id
+  path = get_readme_path problem_id
+  return if File.exists?(path)
+
+  desc = get_problem_description problem_id
+  File.open(path, 'w') do |file|
+    file.write "# [#{desc[:title]}](#{desc[:url]})\n\n#{desc[:problem_content]}"
+  end
+end
 
 def problem_id_from_path path
   Regexp.new("#{__dir__}/(\\d)").match(path)[1]
@@ -46,6 +73,8 @@ task 'new', [:id, :lang] do |t, options|
     FileUtils.symlink "#{__dir__}/lib/euler.scala", "#{__dir__}/#{pid}/scala/euler.scala"
     FileUtils.cp "#{__dir__}/rake/templates/new.scala", "#{__dir__}/#{pid}/scala/#{pid}.scala"
   end
+
+  write_readme pid
 end
 
 task 'test' do
