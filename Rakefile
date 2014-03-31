@@ -51,3 +51,17 @@ task 'new', [:problem_id, :language] do |t, options|
   puts "##{problem.id} - #{problem.name}".bold
   puts
 end
+
+task 'desc', [:problem_id] do |t, options|
+  problem_id = options.problem_id
+  problem    = Problem.new problem_id
+
+  puts
+  puts "##{problem.id} - #{problem.name}".bold
+  puts
+
+  problem.prompt_node.css('p').each do |p|
+    puts p.inner_html
+    puts
+  end
+end

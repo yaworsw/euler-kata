@@ -24,12 +24,20 @@ class Problem
     @doc ||= Nokogiri::HTML(open(self.url))
   end
 
+  def prompt_node
+    @prompt_node ||= doc.css('.problem_content').first
+  end
+
   def prompt
-    @prompt ||= doc.css('.problem_content').first.inner_html
+    @prompt ||= prompt_node.inner_html
+  end
+
+  def title_node
+    @title_node ||= doc.css('h2').first
   end
 
   def title
-    @title ||= doc.css('h2').first.inner_html
+    @title ||= title_node.inner_html
   end
 
   alias_method :name, :title
