@@ -1,9 +1,4 @@
-import os
-import sys
-
-sys.path.append(os.path.realpath(os.path.dirname(__file__) + '/../../lib'))
-
-euler = __import__('euler')
+import euler
 
 def fibSequence(start, maximum):
   i   = start

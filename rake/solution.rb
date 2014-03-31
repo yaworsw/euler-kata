@@ -95,6 +95,7 @@ class Solution
     end
 
     def prep_python
+      FileUtils.symlink "#{ROOT}/lib/euler.py", "#{ROOT}/#{pid}/python/euler.py"
       FileUtils.cp "#{ROOT}/rake/templates/new.py", "#{ROOT}/#{pid}/python/#{pid}.py"
     end
 

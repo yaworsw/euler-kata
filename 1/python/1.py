@@ -1,9 +1,4 @@
-import os
-import sys
-
-sys.path.append(os.path.realpath(os.path.dirname(__file__) + '/../../lib'))
-
-euler = __import__('euler')
+import euler
 
 def multiple_of_three(x): return x % 3 == 0
 def multiple_of_five(x):  return x % 5 == 0

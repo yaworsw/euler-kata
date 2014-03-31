@@ -8,7 +8,7 @@
         "*/scala/*"
       ],
       "file_exclude_patterns": [
-        "*/scala/euler.scala"
+        "*/scala/euler.scala", "*/python/euler.py"
       ]
     }
   ]

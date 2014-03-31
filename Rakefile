@@ -84,6 +84,7 @@ task 'test_all' do
 end
 
 desc 'Initialize a new empty solution.'
+task 'n',   [:problem_id, :language] => 'new'
 task 'new', [:problem_id, :language] do |t, options|
   solution = Solution.from_options(options)
   problem  = solution.problem
@@ -97,7 +98,7 @@ task 'new', [:problem_id, :language] do |t, options|
 end
 
 desc 'Describe a problem.'
-task 'd',    [:problem_id] => :desc
+task 'd',    [:problem_id] => 'desc'
 task 'desc', [:problem_id] do |t, options|
   problem = Problem.from_options_or_path(options)
 
