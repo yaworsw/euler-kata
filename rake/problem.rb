@@ -16,7 +16,7 @@ class Problem
   def self.from_path path = ENV['cwd']
     begin
       problem_id  = Regexp.new("#{ROOT}/(\\d+)").match(path)[1]
-      new Problem(problem_id)
+      Problem.new(problem_id)
     rescue
       raise "Unable to distinguish problem id form path (#{path})"
     end

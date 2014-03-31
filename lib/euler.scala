@@ -17,6 +17,19 @@ object euler {
     }
   }
 
+  def even(n: BigInt): Boolean = divisor(n, 2)
+  def odd (n: BigInt): Boolean = !even(n)
+  def divisor(n: BigInt, x: BigInt): Boolean = n % x == 0
+
+  def numDivisors(n: BigInt): BigInt =
+    (1 /: countOccurrences(primeFactors(n))) {
+      (acc, i) =>
+        acc * (1 + i._2)
+    }
+
+  def unique[T](list: List[T]): Iterable[T] =
+    countOccurrences(list).keys
+
   // Reads a file and returns the contents
   def readFile(path: String): String = {
     val source   = io.Source.fromFile(path)
