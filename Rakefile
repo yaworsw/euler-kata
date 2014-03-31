@@ -84,7 +84,6 @@ task 'test_all' do
 end
 
 desc 'Initialize a new empty solution.'
-task n: :new
 task 'new', [:problem_id, :language] do |t, options|
   solution = Solution.from_options(options)
   problem  = solution.problem

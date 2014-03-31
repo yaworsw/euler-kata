@@ -5,8 +5,20 @@ import scala.collection.mutable.HashMap
 
 object euler {
 
+  class PrimesIterator(start: Int, finish: Int) extends Iterator[Int] {
+    var nextVal = if (isPrime(start)) start else nextPrime(start)
+
+    def hasNext(): Boolean = nextVal < finish
+
+    def next(): Int = {
+      var cur = nextVal
+      nextVal = nextPrime(nextVal)
+      cur
+    }
+  }
+
   // Reads a file and returns the contents
-  def readFile(path: String): String ={
+  def readFile(path: String): String = {
     val source   = io.Source.fromFile(path)
     val contents = source.mkString
     source.close()
@@ -52,13 +64,15 @@ object euler {
     else    sieve(upTo, nextPossiblePrime(cur))
 
   // Determines if a number is prime
-  def isPrime(n: Int, divisor: Int = -1): Boolean = divisor match {
-    case -1 => isPrime(n, 2)
-    case _  => {
-      if      (n == 2)                true
-      else if (n % divisor == 0)      false
-      else if (divisor * divisor > n) true
-      else    isPrime(n, nextPossiblePrime(divisor))
+  def isPrime(n: Int, divisor: Int = -1): Boolean = n match {
+    case 2 => true
+    case _ => divisor match {
+      case -1 => isPrime(n, 2)
+      case _  => {
+        if      (n % divisor == 0)      false
+        else if (divisor * divisor > n) true
+        else    isPrime(n, nextPossiblePrime(divisor))
+      }
     }
   }
 
