@@ -86,6 +86,18 @@ class Solution
   private
 
     #
+    # Python
+    #
+
+    def run_python
+      `python #{ROOT}/#{problem_id}/python/#{problem_id}.py`
+    end
+
+    def prep_python
+      FileUtils.cp "#{ROOT}/rake/templates/new.py", "#{ROOT}/#{pid}/python/#{pid}.py"
+    end
+
+    #
     # Ruby
     #
 
@@ -95,6 +107,7 @@ class Solution
     end
 
     def prep_ruby
+      problem_id = @problem.id
       FileUtils.cp "#{ROOT}/rake/templates/new.rb", "#{ROOT}/#{pid}/ruby/#{pid}.rb"
     end
 

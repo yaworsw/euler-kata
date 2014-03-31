@@ -89,16 +89,15 @@ task 'new', [:problem_id, :language] do |t, options|
   solution.prep
 
   puts
-  puts "Done initializing empty #{language} solution for"
+  puts "Done initializing empty #{solution.language} solution for"
   puts "##{problem.id} - #{problem.name}".bold
   puts
 end
 
 desc 'Describe a problem.'
 task 'desc', [:problem_id] do |t, options|
-  problem_id = options.problem_idc
-
-  problem    = Problem.new problem_id
+  options.language = 'whatever'
+  problem = Solution.from_options_or_path(options).problem
 
   puts
   puts "##{problem.id} - #{problem.name}".bold

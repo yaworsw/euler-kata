@@ -60,7 +60,7 @@ class Problem
   alias_method :name, :title
 
   def url
-    "http://projecteuler.net/problem=#{@id}"
+    "http://projecteuler.net/problem=#{id}"
   end
 
   # Readme related methods
