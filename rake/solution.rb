@@ -4,6 +4,10 @@ require_relative './problem.rb'
 
 class Solution
 
+  def self.all
+    Problem.all.map { |p| p.solutions }.flatten
+  end
+
   def self.from_options options
     if options.problem_id.nil? or options.language.nil?
       raise "Insufficient options parameters (#{options})"
@@ -62,6 +66,14 @@ class Solution
 
   def correct?
     self.run == problem.answer
+  end
+
+  #
+  # Conversion methods
+  #
+
+  def to_s
+    "#{language} solution for #{problem}"
   end
 
   protected

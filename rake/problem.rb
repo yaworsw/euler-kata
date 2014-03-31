@@ -1,9 +1,14 @@
 require 'erb'
 require 'nokogiri'
-require 'open-uri'
+require 'open-uri/cached'
 require 'yaml'
 
 class Problem
+
+  def self.all
+    Dir["#{ROOT}/*"].select { |f| File.directory?(f) and /\/\d+$/ === f }
+      .map { |d| Problem.new(/\/(\d+)$/.match(d)[1]) }
+  end
 
   def self.answers
     @@answers ||= YAML.load_file("#{__dir__}/../answers.yaml")
@@ -13,7 +18,15 @@ class Problem
 
   def initialize id
     @id  = id
-    @doc = Nokogiri::HTML(open(self.url))
+  end
+
+  def solutions
+    Dir["#{dir}/*"].select { |f| File.directory?(f) }
+      .map { |d| Solution.new(id, /\/([^\/]+)$/.match(d)[1]) }
+  end
+
+  def dir
+    "#{ROOT}/#{id}"
   end
 
   def has_answer?
@@ -53,7 +66,7 @@ class Problem
   # Readme related methods
 
   def readme_path
-    "#{ROOT}/#{id}/README.md"
+    "#{dir}/README.md"
   end
 
   def readme_template_path
@@ -83,5 +96,13 @@ class Problem
   end
 
   alias_method :write_readme_if_not_already_written, :write_readme_if_not_written
+
+  #
+  # Conversion methods
+  #
+
+  def to_s
+    "##{id} - #{name}"
+  end
 
 end
