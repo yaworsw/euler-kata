@@ -1,6 +1,5 @@
 require 'colorize'
 require 'peach'
-
 require_relative './rake/solution.rb'
 
 ROOT = __dir__
@@ -8,6 +7,7 @@ ROOT = __dir__
 task 'default' => ['run']
 
 desc 'Run a solution to a problem.'
+task r: :run
 task 'run', [:problem_id, :language] do |t, options|
   puts
   begin
@@ -19,6 +19,7 @@ task 'run', [:problem_id, :language] do |t, options|
 end
 
 desc 'Test a solution to see if it is correct.'
+task t: :test
 task 'test', [:problem_id, :language] do |t, options|
   begin
     solution = Solution.from_options_or_path(options)
@@ -45,6 +46,7 @@ task 'test', [:problem_id, :language] do |t, options|
 end
 
 desc 'Tests all solutions to make sure they are all correct.'
+task ta: :test_all
 task 'test_all' do
   failures = []
 
@@ -82,6 +84,7 @@ task 'test_all' do
 end
 
 desc 'Initialize a new empty solution.'
+task n: :new
 task 'new', [:problem_id, :language] do |t, options|
   solution = Solution.from_options(options)
   problem  = solution.problem
@@ -95,6 +98,7 @@ task 'new', [:problem_id, :language] do |t, options|
 end
 
 desc 'Describe a problem.'
+task d: :desc
 task 'desc', [:problem_id] do |t, options|
   options.language = 'whatever'
   problem = Solution.from_options_or_path(options).problem
