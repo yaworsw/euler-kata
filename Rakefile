@@ -6,42 +6,44 @@ ROOT = __dir__
 
 task 'default' => ['run']
 
-task 'run' do
-  puts
+desc 'Run a solution to a problem.  Will attem'
+task 'run', [:problem_id, :language] do |t, options|
   begin
-    puts Solution.from_path().run
+    puts
+    puts Solution.from_options_or_path(options).run
+    puts
   rescue Exception => ex
     puts ex.to_s.on_red
   end
-  puts
 end
 
-task 'test' do
-  solution = Solution.from_path()
-  problem  = solution.problem
+task 'test', [:problem_id, :language] do |t, options|
+  begin
+    solution = Solution.from_options_or_path(options)
+    problem  = solution.problem
 
-  puts
-  puts "Testing #{solution.language} solution to"
-  puts "##{problem.id} - #{problem.name}".bold
-  puts
-  puts "Expected: " + problem.answer.cyan
-  puts "Result:   " + solution.result.cyan
-  puts
+    puts
+    puts "Testing #{solution.language} solution to"
+    puts "##{problem.id} - #{problem.name}".bold
+    puts
+    puts "Expected: " + problem.answer.cyan
+    puts "Result:   " + solution.result.cyan
+    puts
 
-  if solution.correct?
-    puts "                         PASS                         ".bold.on_green
-  else
-    puts "                         FAIL                         ".bold.on_red
+    if solution.correct?
+      puts "                         PASS                         ".bold.on_green
+    else
+      puts "                         FAIL                         ".bold.on_red
+    end
+
+    puts
+  rescue Exception => ex
+    puts ex.to_s.on_red
   end
-
-  puts
 end
 
 task 'new', [:problem_id, :language] do |t, options|
-  problem_id  = options.problem_id
-  language    = options.language
-
-  solution = Solution.new problem_id, language
+  solution = Solution.from_options(options)
   problem  = solution.problem
 
   solution.prep

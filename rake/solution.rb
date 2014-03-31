@@ -4,6 +4,22 @@ require_relative './problem.rb'
 
 class Solution
 
+  def self.from_options options
+    if options.problem_id.nil? or options.language.nil?
+      raise "Insufficient options parameters (#{options})"
+    else
+      Solution.new options.problem_id, options.language
+    end
+  end
+
+  def self.from_options_or_path options
+    if options.problem_id.nil? or options.language.nil?
+      Solution.from_path
+    else
+      Solution.new options.problem_id, options.language
+    end
+  end
+
   def self.from_path path = ENV['cwd']
     begin
       problem_id  = Regexp.new("#{ROOT}/(\\d)").match(path)[1]
