@@ -97,10 +97,8 @@ task 'new', [:problem_id, :language] do |t, options|
 end
 
 desc 'Describe a problem.'
-task d: :desc
 task 'desc', [:problem_id] do |t, options|
-  options.language = 'whatever'
-  problem = Solution.from_options_or_path(options).problem
+  problem = Problem.from_options_or_path(options)
 
   puts
   puts "##{problem.id} - #{problem.name}".bold

@@ -5,6 +5,23 @@ require 'yaml'
 
 class Problem
 
+  def self.from_options_or_path options
+    if options.problem_id.nil?
+      Problem.from_path
+    else
+      Problem.new options.problem_id
+    end
+  end
+
+  def self.from_path path = ENV['cwd']
+    begin
+      problem_id  = Regexp.new("#{ROOT}/(\\d+)").match(path)[1]
+      new Problem(problem_id)
+    rescue
+      raise "Unable to distinguish problem id form path (#{path})"
+    end
+  end
+
   def self.all
     Dir["#{ROOT}/*"].select { |f| File.directory?(f) and /\/\d+$/ === f }
       .map { |d| Problem.new(/\/(\d+)$/.match(d)[1]) }
@@ -18,6 +35,10 @@ class Problem
 
   def initialize id
     @id  = id
+  end
+
+  def solution language
+    Solution.new id, language
   end
 
   def solutions

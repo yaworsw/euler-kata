@@ -26,9 +26,10 @@ class Solution
 
   def self.from_path path = ENV['cwd']
     begin
-      problem_id  = Regexp.new("#{ROOT}/(\\d+)").match(path)[1]
+      problem = Problem.from_path path
+
       language_id = Regexp.new("#{ROOT}/\\d+/([^/]+)").match(path)[1]
-      Solution.new problem_id, language_id
+      problem.solution(language_id)
     rescue
       raise "Unable to distinguish problem or language id form path (#{path})"
     end
