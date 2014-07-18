@@ -1,1 +1,0 @@
-/home/will/src/euler-kata/lib/euler.scala
